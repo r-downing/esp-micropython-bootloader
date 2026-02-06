@@ -1,7 +1,7 @@
+import machine
 import network
 import urequests
 from utime import sleep
-import machine
 
 print("\n\n")
 
