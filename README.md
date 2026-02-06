@@ -31,3 +31,7 @@ enter an option #:
 ```
 
 Enter `w` to set the wifi ssid and password, or `u` to set the update url. The url should be to the raw file ([example](https://raw.githubusercontent.com/r-downing/esp-micropython-bootloader/refs/heads/main/main.py)). The bootloader uses etags to verify if the file has changed.
+
+## development
+
+Use `prek install` to set up automated commit-hooks for linting and formatting.

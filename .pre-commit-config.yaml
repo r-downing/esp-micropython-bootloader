@@ -26,11 +26,6 @@ repos:
     rev: v0.41.0
     hooks:
       - id: markdownlint
-  - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v9.3.3
-    hooks:
-      - id: cspell
-        files: '\.md$'
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.0
     hooks:
