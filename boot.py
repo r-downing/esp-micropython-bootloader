@@ -6,22 +6,16 @@ from utime import sleep
 print("\n\n")
 
 
-def interrupt(msg, delay):
-    print(msg)
-    try:
-        sleep(delay)
-    except KeyboardInterrupt:
-        return True
-    return False
-
-
 def connect():
     ssid = None
     password = None
 
-    if interrupt(
-        "Blocking for 5 seconds. Press CTRL+C now to configure wifi or updates", 5
-    ):
+    try:
+        for i in range(5, 0, -1):
+            print(f"\rConnecting in {i}s. Press CTRL+C now to configure.", end="")
+            sleep(1)
+    except KeyboardInterrupt:
+        print()
         print("w - wifi")
         print("u - update url")
         print("x - exit")
@@ -38,17 +32,17 @@ def connect():
                 with open("url.txt", "wt") as fp:
                     fp.write(url)
 
-    print("connecting", end="")
-
+    print()
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
 
-    for _ in range(30):
+    for i in range(120, 0, -1):
         if wlan.isconnected():
             break
-        print(".", end="")
+        print(f"\rConnecting... ({i})", end="   ")
         sleep(1)
+    print()
 
     return wlan.isconnected()
 
@@ -70,22 +64,27 @@ def get_local_etag():
 
 
 def update_system():
-    url = get_update_url()
-    if not url:
+    update_url = get_update_url()
+    if not update_url:
         print("no update url found in url.txt")
         return
+    print(f"{update_url=}")
     local_etag = get_local_etag()
+
+    print(f"{local_etag=}")
 
     try:
         print("Checking ETag...")
-        res = urequests.request("HEAD", url)
+        res = urequests.request("HEAD", update_url)
         remote_etag = res.headers.get("ETag", "").replace("W/", "")
         res.close()
+
+        print(f"{remote_etag=}")
 
         if remote_etag and remote_etag != local_etag:
             print(f"New version detected ({remote_etag}). Downloading...")
 
-            res = urequests.get(url)
+            res = urequests.get(update_url)
             if res.status_code == 200:
                 with open("main.py", "wb") as f:
                     while True:
@@ -108,3 +107,5 @@ def update_system():
 
 if connect():
     update_system()
+
+print("starting main...")

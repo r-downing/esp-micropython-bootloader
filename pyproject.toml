@@ -1,0 +1,3 @@
+[tool.ruff]
+# Set the line length for both the linter (E501) and the formatter.
+line-length = 120
